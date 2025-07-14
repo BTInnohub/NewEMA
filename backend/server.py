@@ -442,6 +442,58 @@ async def disarm_zone(zone_id: str, current_user: User = Depends(get_current_use
     
     return {"message": "Zone disarmed successfully"}
 
+@api_router.post("/zones/{zone_id}/test-alarm")
+async def test_alarm_zone(zone_id: str, current_user: User = Depends(get_current_user)):
+    zone = await db.zones.find_one({"id": zone_id})
+    if not zone:
+        raise HTTPException(status_code=404, detail="Zone not found")
+    
+    # Update zone status to alarm
+    await db.zones.update_one(
+        {"id": zone_id},
+        {
+            "$set": {
+                "status": ZoneStatus.ALARM,
+                "last_triggered": datetime.utcnow()
+            },
+            "$inc": {"trigger_count": 1}
+        }
+    )
+    
+    # Create test alarm
+    severity = AlarmSeverity.MEDIUM  # Default to medium for manual tests
+    alarm = Alarm(
+        zone_id=zone_id,
+        zone_name=zone["name"],
+        alarm_type=ZoneType(zone["zone_type"]),
+        severity=severity,
+        message=f"TEST ALARM - Zone '{zone['name']}' manually triggered by {current_user.name}",
+        area=zone["area"]
+    )
+    await db.alarms.insert_one(alarm.dict())
+    
+    # Log event
+    await log_event(
+        "test_alarm_triggered",
+        f"Test alarm manually triggered for zone {zone['name']} by {current_user.name}",
+        current_user.id,
+        zone_id,
+        metadata={"severity": severity, "zone_type": zone["zone_type"], "manual": True}
+    )
+    
+    # Broadcast to all connected clients
+    await manager.broadcast(json.dumps({
+        "type": "alarm",
+        "data": alarm.dict()
+    }))
+    
+    await manager.broadcast(json.dumps({
+        "type": "zone_update",
+        "data": {"id": zone_id, "status": ZoneStatus.ALARM}
+    }))
+    
+    return {"message": "Test alarm triggered successfully", "alarm": alarm}
+
 # Alarm endpoints
 @api_router.get("/alarms", response_model=List[Alarm])
 async def get_alarms(current_user: User = Depends(get_current_user)):
