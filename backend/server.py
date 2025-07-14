@@ -384,9 +384,15 @@ async def update_zone(zone_id: str, zone_data: ZoneUpdate, current_user: User = 
     await log_event("zone_updated", f"Zone {updated_zone_obj.name} updated", current_user.id, zone_id)
     
     # Broadcast zone update
+    zone_dict = updated_zone_obj.dict()
+    # Convert datetime objects to ISO format strings for JSON serialization
+    for key, value in zone_dict.items():
+        if isinstance(value, datetime):
+            zone_dict[key] = value.isoformat()
+    
     await manager.broadcast(json.dumps({
         "type": "zone_update",
-        "data": updated_zone_obj.dict()
+        "data": zone_dict
     }))
     
     return updated_zone_obj
