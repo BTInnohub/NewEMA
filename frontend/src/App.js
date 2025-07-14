@@ -586,6 +586,7 @@ const Dashboard = () => {
                   zone={zone}
                   onArm={handleArmZone}
                   onDisarm={handleDisarmZone}
+                  onTestAlarm={handleTestAlarm}
                 />
               ))}
             </div>
