@@ -448,6 +448,15 @@ const Dashboard = () => {
     }
   };
   
+  const handleTestAlarm = async (zoneId) => {
+    try {
+      await axios.post(`${API}/zones/${zoneId}/test-alarm`);
+      fetchData();
+    } catch (error) {
+      console.error('Error triggering test alarm:', error);
+    }
+  };
+  
   const createSampleZones = async () => {
     const sampleZones = [
       { name: 'Main Entrance', zone_type: 'door_contact', area: 'Building A' },
