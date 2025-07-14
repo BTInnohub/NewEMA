@@ -231,7 +231,7 @@ const StatCard = ({ title, value, icon, color = "blue" }) => (
   </div>
 );
 
-const ZoneCard = ({ zone, onArm, onDisarm }) => {
+const ZoneCard = ({ zone, onArm, onDisarm, onTestAlarm }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'normal': return 'bg-green-500';
@@ -272,22 +272,33 @@ const ZoneCard = ({ zone, onArm, onDisarm }) => {
         </span>
       </div>
       
-      <div className="flex space-x-2">
-        {zone.is_armed ? (
-          <button
-            onClick={() => onDisarm(zone.id)}
-            className="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
-          >
-            Disarm
-          </button>
-        ) : (
-          <button
-            onClick={() => onArm(zone.id)}
-            className="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
-          >
-            Arm
-          </button>
-        )}
+      <div className="flex flex-col space-y-2">
+        <div className="flex space-x-2">
+          {zone.is_armed ? (
+            <button
+              onClick={() => onDisarm(zone.id)}
+              className="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Disarm
+            </button>
+          ) : (
+            <button
+              onClick={() => onArm(zone.id)}
+              className="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Arm
+            </button>
+          )}
+        </div>
+        
+        {/* Test Alarm Button */}
+        <button
+          onClick={() => onTestAlarm(zone.id)}
+          className="w-full py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+        >
+          <span>🧪</span>
+          <span>Test Alarm</span>
+        </button>
       </div>
     </div>
   );
