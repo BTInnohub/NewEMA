@@ -454,8 +454,8 @@ async def test_alarm_zone(zone_id: str, current_user: User = Depends(get_current
     zone = await db.zones.find_one({"id": zone_id})
     if not zone:
         raise HTTPException(status_code=404, detail="Zone not found")
-    
-    # Update zone status to alarm
+
+    # ✅ MongoDB-Update korrekt getrennt
     await db.zones.update_one(
         {"id": zone_id},
         {
@@ -463,12 +463,14 @@ async def test_alarm_zone(zone_id: str, current_user: User = Depends(get_current
                 "status": ZoneStatus.ALARM,
                 "last_triggered": datetime.utcnow()
             },
-            "$inc": {"trigger_count": 1}
+            "$inc": {
+                "trigger_count": 1
+            }
         }
     )
-    
-    # Create test alarm
-    severity = AlarmSeverity.MEDIUM  # Default to medium for manual tests
+
+    # Alarm-Objekt erzeugen
+    severity = AlarmSeverity.MEDIUM
     alarm = Alarm(
         zone_id=zone_id,
         zone_name=zone["name"],
@@ -478,8 +480,7 @@ async def test_alarm_zone(zone_id: str, current_user: User = Depends(get_current
         area=zone["area"]
     )
     await db.alarms.insert_one(alarm.dict())
-    
-    # Log event
+
     await log_event(
         "test_alarm_triggered",
         f"Test alarm manually triggered for zone {zone['name']} by {current_user.name}",
@@ -487,18 +488,23 @@ async def test_alarm_zone(zone_id: str, current_user: User = Depends(get_current
         zone_id,
         metadata={"severity": severity, "zone_type": zone["zone_type"], "manual": True}
     )
-    
-    # Broadcast to all connected clients
+
+    # ✅ datetime-Felder serialisierbar machen
+    alarm_data = alarm.dict()
+    for k, v in alarm_data.items():
+        if isinstance(v, datetime):
+            alarm_data[k] = v.isoformat()
+
     await manager.broadcast(json.dumps({
         "type": "alarm",
-        "data": alarm.dict()
+        "data": alarm_data
     }))
-    
+
     await manager.broadcast(json.dumps({
         "type": "zone_update",
         "data": {"id": zone_id, "status": ZoneStatus.ALARM}
     }))
-    
+
     return {"message": "Test alarm triggered successfully", "alarm": alarm}
 
 # Alarm endpoints
