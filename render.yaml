@@ -5,11 +5,11 @@ services:
     dockerfilePath: ./backend/Dockerfile
     envVars:
       - key: MONGO_URL
-        value: <deine MongoDB-URL>
+        value: mongodb://localhost:27017
       - key: DB_NAME
-        value: ema_db
+        value: test_database
       - key: SECRET_KEY
-        value: <JWT-Geheimnis>
+        value: ema-nextgen-intrusion-detection-system-secret-key
     healthCheckPath: /docs
 
   - name: ema-frontend
