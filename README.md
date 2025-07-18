@@ -1,18 +1,18 @@
-## 🚨 EMA NextGen Intrusion Detection System
+# 🚨 EMA NextGen Intrusion Detection System
 
 EMA NextGen IDS ist ein modernes und sicheres Intrusion Detection System, entwickelt mit FastAPI und React.js, das speziell für eine effiziente Verwaltung und Echtzeit-Überwachung sicherheitskritischer Bereiche entwickelt wurde.
 
-# ✨ Features
+## ✨ Features
 	•	Sichere Benutzerverwaltung mit JWT-basiertem Login und Registrierungsprozess.
 	•	Echtzeitüberwachung von Alarmen und Ereignissen via WebSockets.
 	•	Dynamisches Zonenmanagement für unterschiedliche Sicherheitsbereiche (Einbruch, Sabotage, technische Alarme).
 	•	Rollenspezifische Zugriffssteuerung (Admin, Sicherheitspersonal, Wartung).
 
-# 📦 Technologie-Stack
+## 📦 Technologie-Stack
 	•	Backend: FastAPI, MongoDB, JWT, bcrypt, WebSockets
 	•	Frontend: React.js, Axios, Tailwind CSS
 
-# 🚀 Schneller Start
+## 🚀 Schneller Start
 
 Voraussetzungen
 	•	Python 3.9+
