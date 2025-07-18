@@ -1,0 +1,18 @@
+services:
+  - name: ema-backend
+    type: web
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - key: MONGO_URL
+        value: <deine MongoDB-URL>
+      - key: DB_NAME
+        value: ema_db
+      - key: SECRET_KEY
+        value: <JWT-Geheimnis>
+    healthCheckPath: /docs
+
+  - name: ema-frontend
+    type: web
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
