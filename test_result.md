@@ -155,6 +155,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: Alarm retrieval, acknowledgment, and resolution endpoints working correctly. Background simulation system operational. Alarm management system fully functional."
+      - working: true
+        agent: "testing"
+        comment: "✅ POST-UI REDESIGN RETEST: Alarm Management System verified working correctly after UI redesign. Alarm retrieval, acknowledgment, and resolution all functional. Test alarms properly created and managed."
 
   - task: "Real-time WebSocket Communication"
     implemented: true
