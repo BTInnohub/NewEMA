@@ -354,21 +354,21 @@ const ZoneCard = ({ zone, onArm, onDisarm, onTestAlarm }) => {
   
   const getTypeIcon = (type) => {
     switch (type) {
-      case 'motion': return '🚶';
+      case 'motion': return '👤';
       case 'door_contact': return '🚪';
       case 'glass_break': return '🪟';
       case 'fire': return '🔥';
-      case 'burglary': return '🚨';
+      case 'burglary': return '🛡️';
       default: return '⚠️';
     }
   };
   
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+    <div className="bg-slate-800/60 backdrop-blur-md rounded-2xl p-6 border border-slate-700 hover:border-slate-600 transition-all duration-300 hover:shadow-xl">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">{zone.name}</h3>
-          <p className="text-sm text-gray-500">{zone.area}</p>
+          <h3 className="text-lg font-semibold text-white">{zone.name}</h3>
+          <p className="text-sm text-slate-400">{zone.area}</p>
         </div>
         <div className="text-2xl">{getTypeIcon(zone.zone_type)}</div>
       </div>
@@ -376,10 +376,10 @@ const ZoneCard = ({ zone, onArm, onDisarm, onTestAlarm }) => {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <div className={`w-3 h-3 rounded-full ${getStatusColor(zone.status)}`}></div>
-          <span className="text-sm font-medium capitalize">{zone.status}</span>
+          <span className="text-sm font-medium capitalize text-slate-200">{zone.status}</span>
         </div>
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${zone.is_armed ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}`}>
-          {zone.is_armed ? 'Armed' : 'Disarmed'}
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${zone.is_armed ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 'bg-slate-600/50 text-slate-300 border border-slate-500/30'}`}>
+          {zone.is_armed ? '🔒 Armed' : '🔓 Disarmed'}
         </span>
       </div>
       
@@ -402,7 +402,6 @@ const ZoneCard = ({ zone, onArm, onDisarm, onTestAlarm }) => {
           )}
         </div>
         
-        {/* Test Alarm Button */}
         <button
           onClick={() => onTestAlarm(zone.id)}
           className="w-full py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
@@ -418,30 +417,30 @@ const ZoneCard = ({ zone, onArm, onDisarm, onTestAlarm }) => {
 const AlarmCard = ({ alarm, onAcknowledge, onResolve }) => {
   const getSeverityColor = (severity) => {
     switch (severity) {
-      case 'low': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      case 'medium': return 'bg-orange-100 text-orange-800 border-orange-300';
-      case 'high': return 'bg-red-100 text-red-800 border-red-300';
-      case 'critical': return 'bg-red-200 text-red-900 border-red-400';
-      default: return 'bg-gray-100 text-gray-800 border-gray-300';
+      case 'low': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'medium': return 'bg-orange-500/20 text-orange-300 border-orange-500/30';
+      case 'high': return 'bg-red-500/20 text-red-300 border-red-500/30';
+      case 'critical': return 'bg-red-600/30 text-red-200 border-red-500/50';
+      default: return 'bg-slate-500/20 text-slate-300 border-slate-500/30';
     }
   };
   
   return (
-    <div className={`border-l-4 p-4 rounded-r-lg ${alarm.status === 'active' ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-gray-300'}`}>
+    <div className={`border-l-4 p-4 rounded-r-xl bg-slate-800/40 backdrop-blur-md ${alarm.status === 'active' ? 'border-red-500 bg-red-500/5' : 'border-slate-600'}`}>
       <div className="flex items-start justify-between mb-2">
         <div>
-          <h4 className="font-semibold text-gray-900">{alarm.zone_name}</h4>
-          <p className="text-sm text-gray-600">{alarm.area}</p>
+          <h4 className="font-semibold text-white">{alarm.zone_name}</h4>
+          <p className="text-sm text-slate-400">{alarm.area}</p>
         </div>
         <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getSeverityColor(alarm.severity)}`}>
           {alarm.severity}
         </span>
       </div>
       
-      <p className="text-sm text-gray-700 mb-3">{alarm.message}</p>
+      <p className="text-sm text-slate-300 mb-3">{alarm.message}</p>
       
       <div className="flex items-center justify-between">
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-slate-500">
           {new Date(alarm.triggered_at).toLocaleString()}
         </span>
         
