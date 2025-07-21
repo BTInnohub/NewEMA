@@ -748,11 +748,11 @@ const Dashboard = () => {
         {activeTab === 'zones' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-semibold text-gray-900">Security Zones</h2>
+              <h2 className="text-2xl font-semibold text-white">Security Zone Management</h2>
               {zones.length === 0 && (
                 <button
                   onClick={createSampleZones}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
                 >
                   Create Sample Zones
                 </button>
@@ -772,11 +772,12 @@ const Dashboard = () => {
             </div>
             
             {zones.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-500 mb-4">No security zones configured</p>
+              <div className="text-center py-16 bg-slate-800/50 rounded-2xl border border-slate-700">
+                <div className="text-6xl mb-4">🛡️</div>
+                <p className="text-slate-300 text-lg mb-6">No security zones configured</p>
                 <button
                   onClick={createSampleZones}
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                  className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors text-lg"
                 >
                   Create Sample Zones
                 </button>
@@ -787,9 +788,9 @@ const Dashboard = () => {
         
         {activeTab === 'alarms' && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Alarm Management</h2>
+            <h2 className="text-2xl font-semibold text-white">Alarm Management Center</h2>
             
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="bg-slate-800/50 backdrop-blur-md rounded-2xl border border-slate-700 p-6">
               <div className="space-y-4">
                 {alarms.map((alarm) => (
                   <AlarmCard
@@ -800,8 +801,9 @@ const Dashboard = () => {
                   />
                 ))}
                 {alarms.length === 0 && (
-                  <div className="text-center py-12">
-                    <p className="text-gray-500">No alarms to display</p>
+                  <div className="text-center py-16">
+                    <div className="text-6xl mb-4">✅</div>
+                    <p className="text-slate-300 text-lg">No alarms - All systems normal</p>
                   </div>
                 )}
               </div>
