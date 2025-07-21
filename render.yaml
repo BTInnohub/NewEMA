@@ -1,0 +1,18 @@
+services:
+  - name: ema-backend
+    type: web
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - key: MONGO_URL
+        value: mongodb://localhost:27017
+      - key: DB_NAME
+        value: test_database
+      - key: SECRET_KEY
+        value: ema-nextgen-intrusion-detection-system-secret-key
+    healthCheckPath: /docs
+
+  - name: ema-frontend
+    type: web
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
