@@ -206,6 +206,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: Dashboard statistics endpoint returning all required fields correctly with accurate counts and system information."
+      - working: true
+        agent: "testing"
+        comment: "✅ POST-UI REDESIGN RETEST: Dashboard Statistics API verified working correctly after UI redesign. All required fields present, accurate counts maintained, system information properly returned."
 
   - task: "Event Logging System"
     implemented: true
