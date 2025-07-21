@@ -231,6 +231,117 @@ const StatCard = ({ title, value, icon, color = "blue" }) => (
   </div>
 );
 
+// Modern Zone Status Card for Home Screen
+const HomeZoneCard = ({ zone, onArm, onDisarm, onTestAlarm }) => {
+  const getStatusInfo = (status) => {
+    switch (status) {
+      case 'normal':
+        return {
+          color: 'bg-green-500',
+          bgColor: 'bg-green-50',
+          textColor: 'text-green-800',
+          label: 'NORMAL',
+          borderColor: 'border-green-200'
+        };
+      case 'alarm':
+        return {
+          color: 'bg-red-500 animate-pulse',
+          bgColor: 'bg-red-50',
+          textColor: 'text-red-800',
+          label: 'ALARM',
+          borderColor: 'border-red-300'
+        };
+      case 'fault':
+        return {
+          color: 'bg-yellow-500',
+          bgColor: 'bg-yellow-50',
+          textColor: 'text-yellow-800',
+          label: 'FAULT',
+          borderColor: 'border-yellow-200'
+        };
+      default:
+        return {
+          color: 'bg-gray-500',
+          bgColor: 'bg-gray-50',
+          textColor: 'text-gray-800',
+          label: 'OFFLINE',
+          borderColor: 'border-gray-200'
+        };
+    }
+  };
+  
+  const getTypeIcon = (type) => {
+    switch (type) {
+      case 'motion': return '👤';
+      case 'door_contact': return '🚪';
+      case 'glass_break': return '🪟';
+      case 'fire': return '🔥';
+      case 'burglary': return '🛡️';
+      default: return '⚠️';
+    }
+  };
+  
+  const statusInfo = getStatusInfo(zone.status);
+  
+  return (
+    <div className={`relative bg-white rounded-2xl p-6 border-2 ${statusInfo.borderColor} transition-all duration-300 hover:shadow-lg`}>
+      {/* Status Indicator Bar */}
+      <div className={`absolute top-0 left-0 right-0 h-2 ${statusInfo.color} rounded-t-2xl`}></div>
+      
+      {/* Zone Header */}
+      <div className="flex items-start justify-between mb-4 mt-2">
+        <div className="flex-1">
+          <h3 className="text-xl font-semibold text-gray-900 mb-1">{zone.name}</h3>
+          <p className="text-sm text-gray-500">{zone.area}</p>
+        </div>
+        <div className="text-3xl ml-4">{getTypeIcon(zone.zone_type)}</div>
+      </div>
+      
+      {/* Status Display */}
+      <div className={`${statusInfo.bgColor} rounded-xl p-4 mb-4`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className={`w-4 h-4 rounded-full ${statusInfo.color}`}></div>
+            <span className={`font-bold text-sm ${statusInfo.textColor}`}>{statusInfo.label}</span>
+          </div>
+          <span className={`px-3 py-1 rounded-full text-xs font-medium ${zone.is_armed ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-gray-100 text-gray-800 border border-gray-200'}`}>
+            {zone.is_armed ? '🔒 ARMED' : '🔓 DISARMED'}
+          </span>
+        </div>
+      </div>
+      
+      {/* Action Buttons */}
+      <div className="flex space-x-2">
+        {zone.is_armed ? (
+          <button
+            onClick={() => onDisarm(zone.id)}
+            className="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-colors flex items-center justify-center space-x-2"
+          >
+            <span>🔓</span>
+            <span>DISARM</span>
+          </button>
+        ) : (
+          <button
+            onClick={() => onArm(zone.id)}
+            className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors flex items-center justify-center space-x-2"
+          >
+            <span>🔒</span>
+            <span>ARM</span>
+          </button>
+        )}
+        
+        <button
+          onClick={() => onTestAlarm(zone.id)}
+          className="px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-medium transition-colors flex items-center justify-center"
+          title="Test Alarm"
+        >
+          <span>🧪</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const ZoneCard = ({ zone, onArm, onDisarm, onTestAlarm }) => {
   const getStatusColor = (status) => {
     switch (status) {
