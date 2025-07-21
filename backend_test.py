@@ -181,6 +181,18 @@ class BackendTester:
                 else:
                     self.log_result("Zone Management API", False, f"Zone disarm failed: {response.status_code}")
                     
+                # Test Test Alarm functionality (key requirement from review)
+                response = self.session.post(f"{API_BASE_URL}/zones/{self.test_zone_id}/test-alarm", headers=headers)
+                if response.status_code == 200:
+                    test_alarm_result = response.json()
+                    self.log_result("Zone Management API", True, "Test Alarm triggered successfully")
+                    # Store the alarm ID for later testing
+                    if "alarm" in test_alarm_result:
+                        self.test_alarm_id = test_alarm_result["alarm"].get("id")
+                        self.log_result("Zone Management API", True, f"Test alarm created with ID: {self.test_alarm_id}")
+                else:
+                    self.log_result("Zone Management API", False, f"Test Alarm failed: {response.status_code} - {response.text}")
+                    
             self.set_test_status("Zone Management API", "PASS")
             return True
             
