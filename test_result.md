@@ -137,6 +137,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: Zone CRUD operations, arm/disarm functionality all working. Fixed minor JSON serialization issue with datetime objects in WebSocket broadcasts. All zone management features functional."
+      - working: true
+        agent: "testing"
+        comment: "✅ POST-UI REDESIGN RETEST: Zone Management API fully functional after UI redesign. CRUD operations working, arm/disarm functionality operational, Test Alarm endpoint now working correctly (fixed JSON serialization issue). All zone management features verified."
 
   - task: "Alarm Management System"
     implemented: true
