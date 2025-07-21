@@ -482,9 +482,15 @@ async def test_alarm_zone(zone_id: str, current_user: User = Depends(get_current
     )
     
     # Broadcast to all connected clients
+    alarm_dict = alarm.dict()
+    # Convert datetime objects to ISO format strings for JSON serialization
+    for key, value in alarm_dict.items():
+        if isinstance(value, datetime):
+            alarm_dict[key] = value.isoformat()
+    
     await manager.broadcast(json.dumps({
         "type": "alarm",
-        "data": alarm.dict()
+        "data": alarm_dict
     }))
     
     await manager.broadcast(json.dumps({
