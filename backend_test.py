@@ -14,7 +14,7 @@ import sys
 import os
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://ca44ade9-d05c-41aa-82e6-101657650d6c.preview.emergentagent.com"
+BACKEND_URL = "https://ef5ac598-f312-4c67-b352-9f0c3a8abcfe.preview.emergentagent.com"
 API_BASE_URL = f"{BACKEND_URL}/api"
 WS_URL = f"wss://ca44ade9-d05c-41aa-82e6-101657650d6c.preview.emergentagent.com/ws"
 
