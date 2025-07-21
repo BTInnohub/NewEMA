@@ -600,21 +600,36 @@ const Dashboard = () => {
   }
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)' }}>
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-slate-900/80 backdrop-blur-md border-b border-slate-700 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-20">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">EMA NextGen</h1>
-              <span className="ml-2 text-sm text-gray-500">Intrusion Detection System</span>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">E</span>
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-white">EMA NextGen</h1>
+                  <p className="text-sm text-blue-300">Intrusion Detection System</p>
+                </div>
+              </div>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Welcome, {user?.name}</span>
+            <div className="flex items-center space-x-6">
+              {/* System Status Indicator */}
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-sm text-green-300">System Active</span>
+              </div>
+              
+              <div className="text-sm text-slate-300">
+                Welcome, <span className="font-semibold text-white">{user?.name}</span>
+              </div>
               <button
                 onClick={logout}
-                className="text-sm text-gray-500 hover:text-gray-700"
+                className="text-sm text-slate-400 hover:text-white transition-colors bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700"
               >
                 Logout
               </button>
@@ -624,20 +639,25 @@ const Dashboard = () => {
       </header>
       
       {/* Navigation */}
-      <nav className="bg-white shadow-sm">
+      <nav className="bg-slate-800/60 backdrop-blur-md border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
-            {['overview', 'zones', 'alarms'].map((tab) => (
+            {[
+              { id: 'overview', label: 'Home', icon: '🏠' },
+              { id: 'zones', label: 'Zones', icon: '🛡️' },
+              { id: 'alarms', label: 'Alarms', icon: '🚨' }
+            ].map((tab) => (
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${
-                  activeTab === tab
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
+                  activeTab === tab.id
+                    ? 'border-blue-400 text-blue-300'
+                    : 'border-transparent text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {tab}
+                <span>{tab.icon}</span>
+                <span>{tab.label}</span>
               </button>
             ))}
           </div>
@@ -648,7 +668,7 @@ const Dashboard = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeTab === 'overview' && (
           <div className="space-y-8">
-            {/* Stats Grid */}
+            {/* System Status Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <StatCard title="Total Zones" value={stats.total_zones || 0} icon="🏢" color="blue" />
               <StatCard title="Active Alarms" value={stats.active_alarms || 0} icon="🚨" color="red" />
@@ -656,23 +676,72 @@ const Dashboard = () => {
               <StatCard title="Events Today" value={stats.total_events_today || 0} icon="📊" color="purple" />
             </div>
             
-            {/* Recent Alarms */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Alarms</h2>
-              <div className="space-y-4">
-                {alarms.slice(0, 5).map((alarm) => (
-                  <AlarmCard
-                    key={alarm.id}
-                    alarm={alarm}
-                    onAcknowledge={handleAcknowledgeAlarm}
-                    onResolve={handleResolveAlarm}
-                  />
-                ))}
-                {alarms.length === 0 && (
-                  <p className="text-gray-500 text-center py-8">No recent alarms</p>
+            {/* Main Zone Display */}
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-semibold text-white">Security Zones</h2>
+                {zones.length === 0 && (
+                  <button
+                    onClick={createSampleZones}
+                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+                  >
+                    Create Sample Zones
+                  </button>
                 )}
               </div>
+              
+              {zones.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {zones.slice(0, 4).map((zone) => (
+                    <HomeZoneCard
+                      key={zone.id}
+                      zone={zone}
+                      onArm={handleArmZone}
+                      onDisarm={handleDisarmZone}
+                      onTestAlarm={handleTestAlarm}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16 bg-slate-800/50 rounded-2xl border border-slate-700">
+                  <div className="text-6xl mb-4">🛡️</div>
+                  <p className="text-slate-300 text-lg mb-6">No security zones configured</p>
+                  <button
+                    onClick={createSampleZones}
+                    className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors text-lg"
+                  >
+                    Create Sample Zones
+                  </button>
+                </div>
+              )}
             </div>
+            
+            {/* Recent Activity */}
+            {alarms.length > 0 && (
+              <div className="bg-slate-800/50 backdrop-blur-md rounded-2xl border border-slate-700 p-6">
+                <h3 className="text-xl font-semibold text-white mb-4">Recent Activity</h3>
+                <div className="space-y-3">
+                  {alarms.slice(0, 3).map((alarm) => (
+                    <div key={alarm.id} className="flex items-center justify-between bg-slate-700/50 p-4 rounded-xl">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-3 h-3 rounded-full ${alarm.status === 'active' ? 'bg-red-500' : 'bg-gray-400'}`}></div>
+                        <div>
+                          <p className="text-white font-medium">{alarm.zone_name}</p>
+                          <p className="text-slate-400 text-sm">{new Date(alarm.triggered_at).toLocaleString()}</p>
+                        </div>
+                      </div>
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        alarm.severity === 'high' ? 'bg-red-100 text-red-800' :
+                        alarm.severity === 'medium' ? 'bg-orange-100 text-orange-800' :
+                        'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {alarm.severity}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
         
